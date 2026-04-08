@@ -81,15 +81,19 @@
       width:40px;
       height:40px;
       border-radius:14px;
-      display:grid;
-      place-items:center;
-      background:linear-gradient(135deg, rgba(143,179,255,0.28), rgba(255,255,255,0.08));
+      overflow:hidden;
+      display:block;
       border:1px solid rgba(255,255,255,0.12);
       box-shadow:inset 0 1px 0 rgba(255,255,255,0.12);
-      font-weight:800;
-      font-size:20px;
-      color:#fff;
+      background:linear-gradient(135deg, rgba(143,179,255,0.28), rgba(255,255,255,0.08));
       flex:none;
+    }
+
+    .brand-mark img{
+      width:100%;
+      height:100%;
+      display:block;
+      object-fit:cover;
     }
 
     .brand-text{
@@ -264,6 +268,7 @@
       transform:translateX(-50%);
       border-radius:999px;
       background:rgba(255,255,255,0.12);
+      z-index:2;
     }
 
     .phone-screen{
@@ -276,89 +281,11 @@
       background:#1d2847;
     }
 
-    .theme-sky{
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.12), transparent 35%),
-        linear-gradient(180deg, #88c4ff 0%, #d9efff 100%);
-    }
-
-    .theme-sakura{
-      background:
-        radial-gradient(circle at 20% 18%, rgba(255,255,255,0.60) 0 8px, transparent 9px),
-        radial-gradient(circle at 78% 32%, rgba(255,220,235,0.86) 0 7px, transparent 8px),
-        radial-gradient(circle at 30% 58%, rgba(255,210,230,0.78) 0 6px, transparent 7px),
-        linear-gradient(180deg, #ffd6e6 0%, #fff2f7 100%);
-    }
-
-    .theme-night{
-      background:
-        radial-gradient(circle at 22% 14%, rgba(255,255,255,0.9) 0 1.5px, transparent 2px),
-        radial-gradient(circle at 72% 24%, rgba(255,255,255,0.85) 0 1.5px, transparent 2px),
-        radial-gradient(circle at 35% 38%, rgba(255,255,255,0.75) 0 1.2px, transparent 2px),
-        radial-gradient(circle at 82% 58%, rgba(255,255,255,0.80) 0 1.2px, transparent 2px),
-        linear-gradient(180deg, #112347 0%, #050913 100%);
-    }
-
-    .theme-paper{
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.44), rgba(255,255,255,0.18)),
-        repeating-linear-gradient(180deg, transparent 0 22px, rgba(80,70,50,0.08) 22px 23px),
-        #efe3c8;
-    }
-
-    .screen-ui{
-      position:absolute;
-      inset:0;
-      display:flex;
-      flex-direction:column;
-    }
-
-    .topbar{
-      height:44px;
-      background:rgba(255,255,255,0.18);
-      border-bottom:1px solid rgba(255,255,255,0.10);
-    }
-
-    .chat-area{
-      flex:1;
-      padding:16px 12px;
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-      justify-content:flex-end;
-    }
-
-    .bubble{
-      max-width:78%;
-      padding:9px 12px;
-      border-radius:16px;
-      font-size:12px;
-      line-height:1.45;
-      box-shadow:0 5px 14px rgba(0,0,0,0.10);
-    }
-
-    .bubble.ai{
-      background:rgba(255,255,255,0.84);
-      color:#24304d;
-      align-self:flex-start;
-    }
-
-    .bubble.me{
-      background:rgba(61,104,203,0.78);
-      color:#fff;
-      align-self:flex-end;
-    }
-
-    .composer{
-      padding:10px;
-      border-top:1px solid rgba(255,255,255,0.10);
-      background:rgba(255,255,255,0.16);
-    }
-
-    .composer-bar{
-      height:34px;
-      border-radius:999px;
-      background:rgba(255,255,255,0.72);
+    .phone-screen img{
+      width:100%;
+      height:100%;
+      display:block;
+      object-fit:cover;
     }
 
     .phone.left{
@@ -579,23 +506,6 @@
       .phone.right{
         transform:translateX(68px) rotate(14deg);
       }
-
-      .bubble{
-        font-size:10px;
-        padding:7px 10px;
-      }
-
-      .topbar{
-        height:34px;
-      }
-
-      .composer{
-        padding:8px;
-      }
-
-      .composer-bar{
-        height:28px;
-      }
     }
   </style>
 </head>
@@ -603,7 +513,9 @@
   <header class="site-header">
     <div class="wrap site-header-inner">
       <div class="brand">
-        <div class="brand-mark">V</div>
+        <div class="brand-mark">
+          <img src="./assets/icon.png" alt="veil - AI Chat アイコン">
+        </div>
         <div class="brand-text">
           <p class="brand-title">veil - AI Chat</p>
           <p class="brand-sub">好きな着せ替えテーマを選んで使える AI チャットアプリ</p>
@@ -637,54 +549,26 @@
         <div class="hero-card">
           <div class="phone-stack" aria-hidden="true">
             <div class="phone left">
-              <div class="phone-screen theme-sakura">
-                <div class="screen-ui">
-                  <div class="topbar"></div>
-                  <div class="chat-area">
-                    <div class="bubble ai">やさしい春の雰囲気で会話できます。</div>
-                    <div class="bubble me">今日もよろしく！</div>
-                  </div>
-                  <div class="composer"><div class="composer-bar"></div></div>
-                </div>
+              <div class="phone-screen">
+                <img src="./assets/theme-sakura.webp" alt="桜テーマの画面">
               </div>
             </div>
 
             <div class="phone mid-left">
-              <div class="phone-screen theme-sky">
-                <div class="screen-ui">
-                  <div class="topbar"></div>
-                  <div class="chat-area">
-                    <div class="bubble ai">おはようございます！</div>
-                    <div class="bubble me">話し相手になって</div>
-                  </div>
-                  <div class="composer"><div class="composer-bar"></div></div>
-                </div>
+              <div class="phone-screen">
+                <img src="./assets/theme-sky.webp" alt="青空テーマの画面">
               </div>
             </div>
 
             <div class="phone mid-right">
-              <div class="phone-screen theme-night">
-                <div class="screen-ui">
-                  <div class="topbar"></div>
-                  <div class="chat-area">
-                    <div class="bubble ai">落ち着いた夜のテーマも選べます。</div>
-                    <div class="bubble me">静かに話したい夜にいいね</div>
-                  </div>
-                  <div class="composer"><div class="composer-bar"></div></div>
-                </div>
+              <div class="phone-screen">
+                <img src="./assets/theme-night.webp" alt="夜空テーマの画面">
               </div>
             </div>
 
             <div class="phone right">
-              <div class="phone-screen theme-paper">
-                <div class="screen-ui">
-                  <div class="topbar"></div>
-                  <div class="chat-area">
-                    <div class="bubble ai">クラシックな雰囲気も楽しめます。</div>
-                    <div class="bubble me">今日はこのテーマにする</div>
-                  </div>
-                  <div class="composer"><div class="composer-bar"></div></div>
-                </div>
+              <div class="phone-screen">
+                <img src="./assets/theme-paper.webp" alt="雪景色の画面">
               </div>
             </div>
           </div>
