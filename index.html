@@ -4,10 +4,756 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>veil - AI Chat</title>
+  <meta name="description" content="veil - AI Chat は、好きな着せ替えテーマを選んで使える AI チャットアプリです。">
+  <style>
+    :root{
+      --bg-1:#07111f;
+      --bg-2:#101a33;
+      --panel:rgba(16,26,51,0.78);
+      --panel-strong:rgba(18,29,57,0.94);
+      --text:#eef4ff;
+      --muted:#b7c4e5;
+      --line:rgba(255,255,255,0.10);
+      --accent:#8fb3ff;
+      --accent-2:#c7d8ff;
+      --shadow:0 18px 50px rgba(0,0,0,0.28);
+      --radius:24px;
+    }
+
+    *{
+      box-sizing:border-box;
+    }
+
+    html{
+      scroll-behavior:smooth;
+    }
+
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Hiragino Sans","Noto Sans JP",sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(120,160,255,0.18), transparent 28%),
+        radial-gradient(circle at top right, rgba(255,170,220,0.10), transparent 24%),
+        linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
+      line-height:1.7;
+    }
+
+    a{
+      color:var(--accent);
+      text-decoration:none;
+    }
+
+    a:hover{
+      text-decoration:underline;
+    }
+
+    .wrap{
+      width:min(1120px, calc(100% - 32px));
+      margin:0 auto;
+    }
+
+    .site-header{
+      position:sticky;
+      top:0;
+      z-index:10;
+      backdrop-filter:blur(12px);
+      background:rgba(7,17,31,0.52);
+      border-bottom:1px solid rgba(255,255,255,0.06);
+    }
+
+    .site-header-inner{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      min-height:68px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:0;
+    }
+
+    .brand-mark{
+      width:40px;
+      height:40px;
+      border-radius:14px;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(135deg, rgba(143,179,255,0.28), rgba(255,255,255,0.08));
+      border:1px solid rgba(255,255,255,0.12);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,0.12);
+      font-weight:800;
+      font-size:20px;
+      color:#fff;
+      flex:none;
+    }
+
+    .brand-text{
+      min-width:0;
+    }
+
+    .brand-title{
+      margin:0;
+      font-size:18px;
+      font-weight:700;
+      letter-spacing:0.02em;
+    }
+
+    .brand-sub{
+      margin:0;
+      color:var(--muted);
+      font-size:12px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .nav{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .nav a{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:40px;
+      padding:0 14px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,0.10);
+      background:rgba(255,255,255,0.04);
+      color:var(--text);
+      text-decoration:none;
+      font-size:14px;
+      transition:transform .15s ease, background .15s ease, border-color .15s ease;
+    }
+
+    .nav a:hover{
+      transform:translateY(-1px);
+      background:rgba(255,255,255,0.07);
+      border-color:rgba(255,255,255,0.16);
+    }
+
+    .hero{
+      padding:72px 0 40px;
+    }
+
+    .hero-grid{
+      display:grid;
+      grid-template-columns:1.1fr 0.9fr;
+      gap:28px;
+      align-items:stretch;
+    }
+
+    .hero-copy,
+    .hero-card,
+    .section-card{
+      background:var(--panel);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(10px);
+    }
+
+    .hero-copy{
+      padding:36px;
+    }
+
+    .hero-eyebrow{
+      display:inline-flex;
+      align-items:center;
+      min-height:32px;
+      padding:0 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,0.10);
+      background:rgba(255,255,255,0.05);
+      color:var(--accent-2);
+      font-size:13px;
+      letter-spacing:0.02em;
+      margin-bottom:18px;
+    }
+
+    .hero h1{
+      margin:0 0 14px;
+      font-size:clamp(34px, 6vw, 56px);
+      line-height:1.08;
+      letter-spacing:-0.03em;
+    }
+
+    .hero p.lead{
+      margin:0;
+      color:var(--muted);
+      font-size:17px;
+    }
+
+    .hero-actions{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:28px;
+    }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:48px;
+      padding:0 18px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,0.10);
+      background:rgba(255,255,255,0.05);
+      color:var(--text);
+      text-decoration:none;
+      font-weight:600;
+      transition:transform .15s ease, background .15s ease, border-color .15s ease;
+    }
+
+    .btn:hover{
+      transform:translateY(-1px);
+      text-decoration:none;
+    }
+
+    .btn-primary{
+      background:linear-gradient(180deg, rgba(143,179,255,0.34), rgba(143,179,255,0.18));
+      border-color:rgba(143,179,255,0.34);
+    }
+
+    .btn-primary:hover{
+      background:linear-gradient(180deg, rgba(143,179,255,0.42), rgba(143,179,255,0.24));
+    }
+
+    .hero-card{
+      padding:22px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      overflow:hidden;
+    }
+
+    .phone-stack{
+      position:relative;
+      min-height:380px;
+      display:grid;
+      place-items:center;
+    }
+
+    .phone{
+      position:absolute;
+      width:180px;
+      height:340px;
+      border-radius:28px;
+      padding:10px;
+      border:1px solid rgba(255,255,255,0.14);
+      background:rgba(8,14,28,0.88);
+      box-shadow:0 20px 40px rgba(0,0,0,0.34);
+    }
+
+    .phone::before{
+      content:"";
+      position:absolute;
+      top:10px;
+      left:50%;
+      width:70px;
+      height:6px;
+      transform:translateX(-50%);
+      border-radius:999px;
+      background:rgba(255,255,255,0.12);
+    }
+
+    .phone-screen{
+      width:100%;
+      height:100%;
+      border-radius:22px;
+      overflow:hidden;
+      position:relative;
+      border:1px solid rgba(255,255,255,0.08);
+      background:#1d2847;
+    }
+
+    .theme-sky{
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.12), transparent 35%),
+        linear-gradient(180deg, #88c4ff 0%, #d9efff 100%);
+    }
+
+    .theme-sakura{
+      background:
+        radial-gradient(circle at 20% 18%, rgba(255,255,255,0.60) 0 8px, transparent 9px),
+        radial-gradient(circle at 78% 32%, rgba(255,220,235,0.86) 0 7px, transparent 8px),
+        radial-gradient(circle at 30% 58%, rgba(255,210,230,0.78) 0 6px, transparent 7px),
+        linear-gradient(180deg, #ffd6e6 0%, #fff2f7 100%);
+    }
+
+    .theme-night{
+      background:
+        radial-gradient(circle at 22% 14%, rgba(255,255,255,0.9) 0 1.5px, transparent 2px),
+        radial-gradient(circle at 72% 24%, rgba(255,255,255,0.85) 0 1.5px, transparent 2px),
+        radial-gradient(circle at 35% 38%, rgba(255,255,255,0.75) 0 1.2px, transparent 2px),
+        radial-gradient(circle at 82% 58%, rgba(255,255,255,0.80) 0 1.2px, transparent 2px),
+        linear-gradient(180deg, #112347 0%, #050913 100%);
+    }
+
+    .theme-paper{
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.44), rgba(255,255,255,0.18)),
+        repeating-linear-gradient(180deg, transparent 0 22px, rgba(80,70,50,0.08) 22px 23px),
+        #efe3c8;
+    }
+
+    .screen-ui{
+      position:absolute;
+      inset:0;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .topbar{
+      height:44px;
+      background:rgba(255,255,255,0.18);
+      border-bottom:1px solid rgba(255,255,255,0.10);
+    }
+
+    .chat-area{
+      flex:1;
+      padding:16px 12px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      justify-content:flex-end;
+    }
+
+    .bubble{
+      max-width:78%;
+      padding:9px 12px;
+      border-radius:16px;
+      font-size:12px;
+      line-height:1.45;
+      box-shadow:0 5px 14px rgba(0,0,0,0.10);
+    }
+
+    .bubble.ai{
+      background:rgba(255,255,255,0.84);
+      color:#24304d;
+      align-self:flex-start;
+    }
+
+    .bubble.me{
+      background:rgba(61,104,203,0.78);
+      color:#fff;
+      align-self:flex-end;
+    }
+
+    .composer{
+      padding:10px;
+      border-top:1px solid rgba(255,255,255,0.10);
+      background:rgba(255,255,255,0.16);
+    }
+
+    .composer-bar{
+      height:34px;
+      border-radius:999px;
+      background:rgba(255,255,255,0.72);
+    }
+
+    .phone.left{
+      transform:translateX(-108px) rotate(-16deg);
+      z-index:1;
+    }
+
+    .phone.mid-left{
+      transform:translateX(-34px) rotate(-7deg);
+      z-index:2;
+    }
+
+    .phone.mid-right{
+      transform:translateX(36px) rotate(7deg);
+      z-index:3;
+    }
+
+    .phone.right{
+      transform:translateX(110px) rotate(16deg);
+      z-index:1;
+    }
+
+    .hero-card-note{
+      margin-top:12px;
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    .section{
+      padding:20px 0;
+    }
+
+    .section-grid{
+      display:grid;
+      grid-template-columns:repeat(3, 1fr);
+      gap:18px;
+    }
+
+    .section-card{
+      padding:24px;
+    }
+
+    .section-card h2{
+      margin:0 0 10px;
+      font-size:20px;
+    }
+
+    .section-card p{
+      margin:0;
+      color:var(--muted);
+    }
+
+    .links{
+      padding:18px 0 60px;
+    }
+
+    .links-card{
+      background:var(--panel-strong);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      padding:28px;
+      box-shadow:var(--shadow);
+    }
+
+    .links-card h2{
+      margin:0 0 14px;
+      font-size:24px;
+    }
+
+    .links-list{
+      display:grid;
+      grid-template-columns:repeat(2, 1fr);
+      gap:14px;
+      margin-top:18px;
+    }
+
+    .link-item{
+      display:block;
+      padding:18px 18px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,0.10);
+      background:rgba(255,255,255,0.04);
+      text-decoration:none;
+      color:var(--text);
+      transition:transform .15s ease, background .15s ease, border-color .15s ease;
+    }
+
+    .link-item:hover{
+      transform:translateY(-1px);
+      text-decoration:none;
+      background:rgba(255,255,255,0.06);
+      border-color:rgba(255,255,255,0.16);
+    }
+
+    .link-title{
+      display:block;
+      font-weight:700;
+      font-size:16px;
+      margin-bottom:6px;
+    }
+
+    .link-desc{
+      display:block;
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    .site-footer{
+      padding:0 0 40px;
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    .site-footer-inner{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      border-top:1px solid rgba(255,255,255,0.08);
+      padding-top:18px;
+      flex-wrap:wrap;
+    }
+
+    @media (max-width: 920px){
+      .hero-grid{
+        grid-template-columns:1fr;
+      }
+
+      .phone-stack{
+        min-height:340px;
+      }
+
+      .phone{
+        width:150px;
+        height:286px;
+      }
+
+      .phone.left{
+        transform:translateX(-88px) rotate(-15deg);
+      }
+
+      .phone.mid-left{
+        transform:translateX(-28px) rotate(-6deg);
+      }
+
+      .phone.mid-right{
+        transform:translateX(28px) rotate(6deg);
+      }
+
+      .phone.right{
+        transform:translateX(88px) rotate(15deg);
+      }
+
+      .section-grid,
+      .links-list{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media (max-width: 640px){
+      .wrap{
+        width:min(100% - 20px, 1120px);
+      }
+
+      .site-header-inner{
+        padding:10px 0;
+        align-items:flex-start;
+        flex-direction:column;
+      }
+
+      .nav{
+        width:100%;
+        justify-content:flex-start;
+      }
+
+      .hero{
+        padding-top:34px;
+      }
+
+      .hero-copy,
+      .hero-card,
+      .section-card,
+      .links-card{
+        padding:20px;
+        border-radius:20px;
+      }
+
+      .hero h1{
+        font-size:34px;
+      }
+
+      .phone-stack{
+        min-height:280px;
+      }
+
+      .phone{
+        width:120px;
+        height:228px;
+        border-radius:22px;
+      }
+
+      .phone-screen{
+        border-radius:16px;
+      }
+
+      .phone.left{
+        transform:translateX(-68px) rotate(-14deg);
+      }
+
+      .phone.mid-left{
+        transform:translateX(-22px) rotate(-6deg);
+      }
+
+      .phone.mid-right{
+        transform:translateX(22px) rotate(6deg);
+      }
+
+      .phone.right{
+        transform:translateX(68px) rotate(14deg);
+      }
+
+      .bubble{
+        font-size:10px;
+        padding:7px 10px;
+      }
+
+      .topbar{
+        height:34px;
+      }
+
+      .composer{
+        padding:8px;
+      }
+
+      .composer-bar{
+        height:28px;
+      }
+    }
+  </style>
 </head>
 <body>
-  <h1>veil - AI Chat</h1>
-  <p><a href="./privacy-policy.html">Privacy Policy</a></p>
-  <p><a href="./delete-account.html">アカウント削除</a></p>
+  <header class="site-header">
+    <div class="wrap site-header-inner">
+      <div class="brand">
+        <div class="brand-mark">V</div>
+        <div class="brand-text">
+          <p class="brand-title">veil - AI Chat</p>
+          <p class="brand-sub">好きな着せ替えテーマを選んで使える AI チャットアプリ</p>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <a href="./privacy-policy.html">Privacy Policy</a>
+        <a href="./delete-account.html">アカウント削除</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div class="hero-copy">
+          <div class="hero-eyebrow">Customizable AI Chat</div>
+          <h1>好きなテーマで、<br>AIとの会話をもっと自分らしく。</h1>
+          <p class="lead">
+            veil - AI Chat は、気分や好みに合わせて着せ替えテーマを選べる AI チャットアプリです。
+            親しみやすい会話体験と、デザインを選ぶ楽しさを両立しました。
+          </p>
+
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="./privacy-policy.html">Privacy Policyを見る</a>
+            <a class="btn" href="./delete-account.html">アカウント削除について</a>
+          </div>
+        </div>
+
+        <div class="hero-card">
+          <div class="phone-stack" aria-hidden="true">
+            <div class="phone left">
+              <div class="phone-screen theme-sakura">
+                <div class="screen-ui">
+                  <div class="topbar"></div>
+                  <div class="chat-area">
+                    <div class="bubble ai">やさしい春の雰囲気で会話できます。</div>
+                    <div class="bubble me">今日もよろしく！</div>
+                  </div>
+                  <div class="composer"><div class="composer-bar"></div></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="phone mid-left">
+              <div class="phone-screen theme-sky">
+                <div class="screen-ui">
+                  <div class="topbar"></div>
+                  <div class="chat-area">
+                    <div class="bubble ai">おはようございます！</div>
+                    <div class="bubble me">話し相手になって</div>
+                  </div>
+                  <div class="composer"><div class="composer-bar"></div></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="phone mid-right">
+              <div class="phone-screen theme-night">
+                <div class="screen-ui">
+                  <div class="topbar"></div>
+                  <div class="chat-area">
+                    <div class="bubble ai">落ち着いた夜のテーマも選べます。</div>
+                    <div class="bubble me">静かに話したい夜にいいね</div>
+                  </div>
+                  <div class="composer"><div class="composer-bar"></div></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="phone right">
+              <div class="phone-screen theme-paper">
+                <div class="screen-ui">
+                  <div class="topbar"></div>
+                  <div class="chat-area">
+                    <div class="bubble ai">クラシックな雰囲気も楽しめます。</div>
+                    <div class="bubble me">今日はこのテーマにする</div>
+                  </div>
+                  <div class="composer"><div class="composer-bar"></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-card-note">
+            テーマを選ぶことで、会話体験を自分の気分や好みに合わせて楽しめます。
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap section-grid">
+        <article class="section-card">
+          <h2>AIと自然に会話</h2>
+          <p>
+            日常の雑談からちょっとした相談まで、スマホで気軽にやり取りできる会話体験を提供します。
+          </p>
+        </article>
+
+        <article class="section-card">
+          <h2>テーマを着せ替え</h2>
+          <p>
+            明るい雰囲気、落ち着いた雰囲気、個性的な雰囲気など、好みに合わせた見た目を選べます。
+          </p>
+        </article>
+
+        <article class="section-card">
+          <h2>シンプルで使いやすい</h2>
+          <p>
+            親しみやすいメッセージUIで、初めてでも分かりやすく、気持ちよく使える設計を目指しています。
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section class="links">
+      <div class="wrap">
+        <div class="links-card">
+          <h2>サポート情報</h2>
+          <p style="margin:0;color:var(--muted);">
+            本アプリのポリシーやアカウント削除に関する情報は、以下のページから確認できます。
+          </p>
+
+          <div class="links-list">
+            <a class="link-item" href="./privacy-policy.html">
+              <span class="link-title">Privacy Policy</span>
+              <span class="link-desc">収集するデータや利用目的、外部サービス利用について確認できます。</span>
+            </a>
+
+            <a class="link-item" href="./delete-account.html">
+              <span class="link-title">アカウント削除</span>
+              <span class="link-desc">アカウントおよび関連データの削除リクエスト方法を確認できます。</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap site-footer-inner">
+      <div>© veil - AI Chat</div>
+      <div>
+        <a href="./privacy-policy.html">Privacy Policy</a>
+        <span style="opacity:.5;"> · </span>
+        <a href="./delete-account.html">アカウント削除</a>
+      </div>
+    </div>
+  </footer>
 </body>
 </html>
